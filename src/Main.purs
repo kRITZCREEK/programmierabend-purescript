@@ -1,12 +1,13 @@
 module Main where
 
 import Prelude
+
+import Control.Monad.Cont.Trans
 import Control.Monad.Eff
 import Control.Monad.Eff.Console
-import Control.Monad.Cont.Trans
 import Control.Monad.Except.Trans
-import Data.Function
 import Data.Either
+import Data.Function
 
 type Console = Eff (console :: CONSOLE) Unit
 
@@ -17,90 +18,33 @@ foreign import findPlayerPS :: forall eff.
   (Error -> Eff eff Unit)
   (Eff eff Unit)
 
-findPlayer :: Int -> (Either Error Player -> Console) -> Console
-findPlayer playerId cb =
+findPlayerJS :: Int -> (Either Error Player -> Console) -> Console
+findPlayerJS playerId cb =
   runFn3 findPlayerPS playerId (cb <<< Right) (cb <<< Left)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---------------
 -- Datentypen
-
 type Player = { name :: String, age :: Int }
 type Team = { x :: Player, y :: Player }
 type Error = String
 
--- findPlayer :: Int -> (Eiher Error Player -> Console) -> Console
-
+-- Helfer
 handlePlayer :: Either Error Player -> Console
-handlePlayer (Right p) = log p.name
-handlePlayer (Left err) = log err
+handlePlayer (Right p) = log ("Der Spieler: " ++ p.name)
+handlePlayer (Left err)     = log ("Ein Fehler: " ++ err)
 
 handleTeam :: Either Error Team -> Console
-handleTeam (Right t) = log (t.x.name ++ " and " ++ t.y.name)
-handleTeam (Left err) = log err
+handleTeam (Right t)  = log ("Das Team: " ++ t.x.name ++ " & " ++ t.y.name)
+handleTeam (Left err) = log ("Ein Fehler: " ++ err)
 
 team :: Player -> Player -> Team
 team p1 p2 = { x: p1, y: p2 }
 
+-- Applikationslogik
+findPlayer pid = findPlayerJS pid
+
+buildTeamImpl idx idy cb = log "Not implemented"
+
 buildTeam :: Int -> Int -> (Either Error Team -> Console) -> Console
-buildTeam idx idy cb = log "Not implemented!"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+buildTeam idx idy cb = buildTeamImpl idx idy cb
