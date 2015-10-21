@@ -1,6 +1,6 @@
 //module Main
 
-var users = [
+var players = [
   { name: 'John', age: 23 },
   { name: 'Carl', age: 25 },
   { name: 'Lissy', age: null }
@@ -8,25 +8,22 @@ var users = [
 
 var Team = function(x,y) {
     return {x: x, y: y};
-}
+};
 
-var findUser = function(userId, cb, err){
-  if(userId < users.length){
-    cb(users[userId]);
+var findPlayer = function(playerId, cb, err){
+  if(playerId < players.length){
+    cb(players[playerId]);
   } else{
-    err("User not found");
+    err('User not found');
   }
 };
-module.exports.findUser = findUser;
+module.exports.findPlayer = findPlayer;
 
-// var buildTeam = function(idx, idy, cb, err){
-//     findUser(idx, function(x){
-//         findUser(idy, function(y){
-//             cb(new Team(x,y));
-//         }, err)
-//     }, err);
-// };
-// module.exports.buildTeam = buildTeam;
+var buildTeam = function(idx, idy, cb, err){
+  console.log("Not implemented");
+};
+module.exports.buildTeam = buildTeam;
+
 
 
 
@@ -51,12 +48,12 @@ module.exports.findUser = findUser;
 
 
 // Wrapper für PureScript
-module.exports.findUserPS = function(userId, cb, err){
+module.exports.findPlayerPS = function(playerId, cb, err){
   return function(){
-    findUser(
-      userId,
+    findPlayer(
+      playerId,
       function(v){cb(v)();},
       function(e){err(e)();}
     );
-  }
+  };
 };
